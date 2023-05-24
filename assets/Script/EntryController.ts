@@ -1,18 +1,18 @@
-import { _decorator, Component, Node, director, Button } from 'cc';
+import { _decorator, Component, Node, Button, director } from 'cc';
 const { ccclass, property } = _decorator;
 
-@ccclass('BtnController')
-export class BtnController extends Component {
+@ccclass('EntryController')
+export class EntryController extends Component {
     @property({type:Button})
     private musicBtn: Button;
 
     @property({type: Button})
-    private playBtn: Button;
+    private startBtn: Button;
 
     @property({type: Button})
     private helpBtn: Button;
     
-    onclickBtnPlay(){
+    onclickBtnStart(){
         director.loadScene('Setting')
     }
 
@@ -20,7 +20,9 @@ export class BtnController extends Component {
         director.loadScene('Help')
     }
 
-    onclickBtnNext(){
-        director.loadScene('Setting')
+    onclickBtnMusic(){
+        // director.loadScene('Setting')
     }     
 }
+
+
