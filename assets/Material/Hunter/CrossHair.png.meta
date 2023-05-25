@@ -11,7 +11,7 @@
     "6c48a": {
       "importer": "texture",
       "uuid": "33b02964-656d-445d-9a2b-19e7c74f7269@6c48a",
-      "displayName": "ooooooooo",
+      "displayName": "CrossHair",
       "id": "6c48a",
       "name": "texture",
       "userData": {
@@ -35,7 +35,7 @@
     "f9941": {
       "importer": "sprite-frame",
       "uuid": "33b02964-656d-445d-9a2b-19e7c74f7269@f9941",
-      "displayName": "ooooooooo",
+      "displayName": "CrossHair",
       "id": "f9941",
       "name": "spriteFrame",
       "userData": {
