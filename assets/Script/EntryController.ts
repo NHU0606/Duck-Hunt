@@ -13,16 +13,12 @@ export class EntryController extends Component {
     private helpBtn: Button;
     
     onclickBtnStart(){
-        director.loadScene('Setting')
+        director.loadScene('Play')
     }
 
     onclickBtnHelp(){
         director.loadScene('Help')
     }
-
-    onclickBtnMusic(){
-        // director.loadScene('Setting')
-    }     
 }
 
 

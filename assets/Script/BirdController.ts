@@ -66,5 +66,3 @@ export class BirdController extends Component {
         this.updateDirection(dt);
     }
 }
-
-

@@ -1,11 +1,20 @@
-import { _decorator, Canvas, Component, EventMouse, Node, Sprite, Vec3, EventTouch, instantiate, math, find, Input, input, Vec2, Camera, v3 } from 'cc';
+import { _decorator, Canvas, Component, EventMouse, Node, Sprite, Vec3, EventTouch, instantiate, math, find, Input, input, Vec2, Camera, v3, director } from 'cc';
 import { GameModel } from './GameModel';
 import { GameView } from './GameView';
+import { ScoreController } from './ScoreController';
+import { ResultController } from './ResultController';
+
 const { ccclass, property } = _decorator;
 
 
 @ccclass('GameController')
 export class GameController extends Component {
+    @property({type: ScoreController})
+    private score: ScoreController;
+    
+    @property({type:ResultController})
+    private result: ResultController;
+
     @property({type:GameModel})
     private GameModel: GameModel;
 
@@ -24,20 +33,23 @@ export class GameController extends Component {
     protected start(): void {
         this.schedule(function(){
             this.spawnBird();
-        }, 5)      
+        }, 3)     
     }    
            
     protected spawnBird(dt: number): void {
         const birdNode = instantiate(this.GameModel.BirdPrefab);
         this.GameModel.BirdContain.addChild(birdNode);
         birdNode.setScale(0.6, 0.6, 0.6);
-        birdNode.setPosition(math.randomRangeInt(-450, 450), math.randomRangeInt(-100, 100), 0);
+        birdNode.setPosition(math.randomRangeInt(-450, 450), math.randomRangeInt(-300, -250), 0);
         this.birdPosition = birdNode.getPosition();
-        // this.birdNode.push(birdNode);
     }
     
     onLoad() {
         input.on(Input.EventType.MOUSE_DOWN, this.onMouseMove, this);
+    
+        if(director.getScene().name == 'Play'){
+            this.startGame();
+        }
     }
     
     onMouseMove(event: EventMouse) {
@@ -52,10 +64,18 @@ export class GameController extends Component {
         cameraPos = this.GameModel.BirdContain.inverseTransformPoint(a, mousePos);
 
         if (cameraPos.x >= this.birdPosition.x - 40 && cameraPos.x <= this.birdPosition.x + 40 && cameraPos.y >= this.birdPosition.y - 20 && cameraPos.y <= this.birdPosition.y + 20) {
-            console.log('bang neeee')
+            // this.score.addScore();
+            console.log("click on the bird ok")
         }
     }
 
+    resetGame(){
+        this.startGame();
+    }
+
+    startGame(){
+        this.result.hideResult();
+    }
     
     protected update(dt: number): void {
        
