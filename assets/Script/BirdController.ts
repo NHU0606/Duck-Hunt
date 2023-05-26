@@ -1,4 +1,4 @@
-import { _decorator, Canvas, Component, EventMouse, Node, Sprite, Vec3, EventTouch, instantiate, math, find} from 'cc';
+import { _decorator, Canvas, Component, EventMouse, Node, Sprite, Vec3, Vec2, RigidBody} from 'cc';
 const { ccclass, property } = _decorator;
 
 enum BirdDirection {
@@ -15,14 +15,6 @@ export class BirdController extends Component {
     private directionChangeDelay: number = 1;
     private directionChangeTime: number = 0;
     
-    // protected onLoad(): void {
-    //     this.node.on(Node.EventType.TOUCH_START, this.onClickBird, this);
-    // }
-
-    // protected onClickBird(event: EventTouch): void {
-    //     console.log("rot naooooooooooo")
-    // }
-
     protected moveBird(dt: number): void {
         const movement = new Vec3(0, 0, 0);
             switch (this.currentDirection) {
@@ -48,6 +40,9 @@ export class BirdController extends Component {
                     this.node.angle = 45;
                     this.node.scale = new Vec3(0.6, 0.6, 0);
                     break;
+
+                default : 
+                break;
                 }
             this.node.position = this.node.position.add(movement);
     }
@@ -70,7 +65,6 @@ export class BirdController extends Component {
         this.moveBird(dt);
         this.updateDirection(dt);
     }
-
 }
 
 

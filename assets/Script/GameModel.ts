@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Prefab, Sprite } from 'cc';
+import { _decorator, Component, ImageAsset, instantiate, Node, Prefab, Sprite, Texture2D } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameModel')
@@ -9,8 +9,8 @@ export class GameModel extends Component {
     @property({type:Node})
     private birdContain: Node;
 
-    // @property({type: Sprite})
-    // private mousePointer: Sprite = null;
+    @property({type: Sprite})
+    private mousePointer: Sprite = null;
     
     public get BirdPrefab() : Prefab {
         return this.birdPrefab;
@@ -28,13 +28,15 @@ export class GameModel extends Component {
         this.birdContain = birdContain;
     }
     
-    // public get MousePointer() : Sprite {
-    //     return this.mousePointer
-    // }
+    public get MousePointer() : Sprite {
+        return this.mousePointer
+    }
     
-    // public set MousePointer(mousePointer : Sprite) {
-    //     this.mousePointer = mousePointer;
-    // }
+    public set MousePointer(mousePointer : Sprite) {
+        this.mousePointer = mousePointer;
+    }
 }
+
+
 
 
