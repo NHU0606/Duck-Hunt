@@ -33,8 +33,7 @@ export class GameController extends Component {
         birdNode.setScale(0.6, 0.6, 0.6);
         birdNode.setPosition(math.randomRangeInt(-450, 450), math.randomRangeInt(-100, 100), 0);
         this.birdPosition = birdNode.getPosition();
-        this.birdNode.push(birdNode);
-        console.log(this.birdNode);
+        // this.birdNode.push(birdNode);
     }
     
     onLoad() {
@@ -47,20 +46,16 @@ export class GameController extends Component {
         let mousePos = new Vec3(cursorPosition.x, cursorPosition.y , 0);
         let worldPos = v3();
         let cameraPos: Vec3;
-        
+
         worldPos = this.camera.screenToWorld(mousePos, worldPos);
         this.testNode.worldPosition = worldPos;
-        // console.log("pos chim", this.birdPosition)
         cameraPos = this.GameModel.BirdContain.inverseTransformPoint(a, mousePos);
-        // console.log('camera ', cameraPos);
-        // for (let i = 0; i < this.birdNode.length; i++) {
-            // if (cameraPos.x >= this.birdNode[i].position.x - 40 && cameraPos.x <= this.birdNode[i].position.x + 40 && cameraPos.y >= this.birdNode[i].position.y - 20 && cameraPos.y <= this.birdNode[i].position.y + 20) {
-            //     console.log("bang r")
-            // }
 
-        // }
-        // console.log('mouse ',cursorPosition);        
+        if (cameraPos.x >= this.birdPosition.x - 40 && cameraPos.x <= this.birdPosition.x + 40 && cameraPos.y >= this.birdPosition.y - 20 && cameraPos.y <= this.birdPosition.y + 20) {
+            console.log('bang neeee')
+        }
     }
+
     
     protected update(dt: number): void {
        
