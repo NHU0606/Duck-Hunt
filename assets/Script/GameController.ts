@@ -31,6 +31,8 @@ export class GameController extends Component {
     private birdNode: Node[] = []
 
     protected start(): void {
+        this.result.hideResult();
+
         this.schedule(function(){
             this.spawnBird();
         }, 3)     
@@ -70,9 +72,12 @@ export class GameController extends Component {
         }
     }
    
+    onClickAgain() {
+        director.loadScene('Play');
+    }
 
     startGame() {
-        this.result.hideResult();
+        // this.result.node.active = false;
         director.resume();
     }
 
