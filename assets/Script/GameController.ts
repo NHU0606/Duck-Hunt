@@ -28,17 +28,44 @@ export class GameController extends Component {
     private testNode : Node;
     
     private birdPosition: Vec3;
-    private birdNode: Node[] = []
+    private totalTime: number = 10;
+    private time: number;
 
     protected start(): void {
         this.result.hideResult();
 
         this.schedule(function(){
             this.spawnBird();
-        }, 3)     
+        }, 3)  
+        
+        // time
+        this.time = this.totalTime;
+        this.updateTimeLabel();
+        this.schedule(this.updateTime, 1);
     }    
+
+    updateTime(){
+        this.time--;
+
+        if(this.time >= 0){
+            this.updateTimeLabel();
+            if(this.time == 0) {
+                this.onTimeUp();
+            }
+        }
+    }
+
+    updateTimeLabel(){
+        this.GameModel.TimeLabel.string = this.time.toString();
+    }
+
+    onTimeUp(){
+        console.log("stop timeeee")
+        director.pause();
+        this.result.showResult();
+    }
            
-    protected spawnBird(dt: number): void {
+    protected spawnBird(): void {
         const birdNode = instantiate(this.GameModel.BirdPrefab);
         this.GameModel.BirdContain.addChild(birdNode);
         birdNode.setScale(0.6, 0.6, 0.6);
@@ -51,7 +78,6 @@ export class GameController extends Component {
     
         if(director.getScene().name == 'Play'){
             this.startGame();
-            // this.result.resetScore();
         }
     }
     
@@ -82,7 +108,7 @@ export class GameController extends Component {
     }
 
     protected update(dt: number): void {
-       
+        
     }
 }
 

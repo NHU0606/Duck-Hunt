@@ -10,7 +10,7 @@ enum BirdDirection {
 
 @ccclass('BirdController')
 export class BirdController extends Component {
-    private birdSpeed: number = 50;
+    private birdSpeed: number = 80;
     private currentDirection: BirdDirection = BirdDirection.TopRight;
     private directionChangeDelay: number = 1;
     private directionChangeTime: number = 0;
@@ -60,7 +60,9 @@ export class BirdController extends Component {
         const nextDirection = (this.currentDirection + 1) % directionCount;
         this.currentDirection = nextDirection;
     }
-            
+
+    
+
     protected update(dt: number): void {
         this.moveBird(dt);
         this.updateDirection(dt);
