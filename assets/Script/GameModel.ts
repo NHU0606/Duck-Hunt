@@ -7,7 +7,8 @@ export class GameModel extends Component {
     private birdPrefab: Prefab = null;
 
     @property({type:Node})
-    private birdContain: Node;   
+    private birdContain: Node; 
+
    
     public get BirdPrefab() : Prefab {
         return this.birdPrefab;

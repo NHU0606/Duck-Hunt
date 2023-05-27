@@ -5,7 +5,7 @@ const { ccclass, property } = _decorator;
 @ccclass('ResultController')
 export class ResultController extends Component {
     @property({type: ScoreController})
-    private score: ScoreController;
+    private score: ScoreController = null;
     
     @property({type: Label})
     private highScore: Label;
@@ -36,12 +36,25 @@ export class ResultController extends Component {
     }
 
     showResult(){
+        let maxScore = parseInt(localStorage.getItem('highscore'))
+        this.highScore.string = `High score: ${maxScore}`;
+        this.urScore.string = `Your score: ${this.score.curScore}`;
         this.node.active = true;
     }
 
     hideResult(){
         this.node.active = false;
     }
+
+    // resetScore(){
+    //     this.score.updateScore(0);
+    //     this.hideResult()
+    // }
+
+    // startGame(){
+    //     // this.score.updateScore(0);
+    //     this.hideResult()
+    // }
 }
 
 

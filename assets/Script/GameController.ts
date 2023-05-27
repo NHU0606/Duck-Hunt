@@ -20,14 +20,14 @@ export class GameController extends Component {
 
     @property({type:GameView})
     private GameView: GameView;
-    private birdPosition: Vec3;
-
+    
     @property({type: Camera})
     private camera : Camera;
-
+    
     @property({type: Node})
     private testNode : Node;
     
+    private birdPosition: Vec3;
     private birdNode: Node[] = []
 
     protected start(): void {
@@ -49,6 +49,7 @@ export class GameController extends Component {
     
         if(director.getScene().name == 'Play'){
             this.startGame();
+            // this.result.resetScore();
         }
     }
     
@@ -64,19 +65,17 @@ export class GameController extends Component {
         cameraPos = this.GameModel.BirdContain.inverseTransformPoint(a, mousePos);
 
         if (cameraPos.x >= this.birdPosition.x - 40 && cameraPos.x <= this.birdPosition.x + 40 && cameraPos.y >= this.birdPosition.y - 20 && cameraPos.y <= this.birdPosition.y + 20) {
-            // this.score.addScore();
+            this.score.addScore();
             console.log("click on the bird ok")
         }
     }
+   
 
-    resetGame(){
-        this.startGame();
-    }
-
-    startGame(){
+    startGame() {
         this.result.hideResult();
+        director.resume();
     }
-    
+
     protected update(dt: number): void {
        
     }

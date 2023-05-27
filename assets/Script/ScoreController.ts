@@ -5,7 +5,7 @@ const { ccclass, property } = _decorator;
 export class ScoreController extends Component {
     public curScore: number = 0;
 
-    protected updateScore(num: number): void {
+    updateScore(num: number) {
         this.curScore = num;
         this.node.getComponent(LabelComponent).string = String(this.curScore);
         let maxScore = parseInt(localStorage.getItem('highscore'))
@@ -16,7 +16,9 @@ export class ScoreController extends Component {
     }
 
     addScore(){
-        this.updateScore(this.curScore + 1)
+        const updatedScore = this.curScore + 1;
+        // const scoreText = `Score: ${updatedScore}`;
+        this.updateScore(updatedScore);
     }
 }
 
