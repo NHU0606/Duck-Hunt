@@ -1,5 +1,4 @@
-import { BirdController } from './BirdController';
-import { _decorator, Canvas, Component, EventMouse, Node, Sprite, Vec3, EventTouch, instantiate, math, find, Input, input, Vec2, Camera, v3, director, Prefab } from 'cc';
+import { _decorator, Canvas, Component, EventMouse, Node, Sprite, Vec3, EventTouch, instantiate, math, find, Input, input, Vec2, Camera, v3, director, Prefab, view, AudioSource } from 'cc';
 import { GameModel } from './GameModel';
 import { ScoreController } from './ScoreController';
 import { ResultController } from './ResultController';
@@ -9,6 +8,9 @@ const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
 export class GameController extends Component {
+    @property(AudioSource)
+    private audioBackGround: AudioSource = null;
+    
     @property({type: ScoreController})
     private score: ScoreController;
     
@@ -24,13 +26,11 @@ export class GameController extends Component {
     @property({type: Node})
     private testNode : Node;
 
-    // @property({type: Prefab})
-    // private hideBird : Prefab;
-    
-    
+    private birdNode: Node = null;
     private birdPosition: Vec3;
     private totalTime: number = 50;
     private time: number;
+    private screenBounds: Vec2 = null;
 
     protected start(): void {
         this.result.hideResult();
@@ -65,28 +65,28 @@ export class GameController extends Component {
         this.result.showResult();
         this.GameModel.BirdContain.active = false;
     }
-           
+
     protected spawnBird(): void {
-        const birdNode = instantiate(this.GameModel.BirdPrefab);
-        this.GameModel.BirdContain.addChild(birdNode);
-        birdNode.setScale(0.6, 0.6, 0.6);
-        birdNode.setPosition(math.randomRangeInt(-450, 450), math.randomRangeInt(-300, -250), 0);
-        this.birdPosition = birdNode.getPosition();
+        this.birdNode = instantiate(this.GameModel.BirdPrefab);
+        this.GameModel.BirdContain.addChild(this.birdNode);
+        this.birdNode.setScale(0.6, 0.6, 0.6);
+        this.birdNode.setPosition(math.randomRangeInt(-450, 450), math.randomRangeInt(-300, -250), 0);
+        this.birdPosition = this.birdNode.getPosition();
     }
     
     onLoad() {
+        this.screenBounds = new Vec2(view.getVisibleSize().width, view.getVisibleSize().height);
         input.on(Input.EventType.MOUSE_DOWN, this.onMouseMove, this);
     
         if(director.getScene().name == 'Play'){
             this.startGame();
         }
+
+        //audio
+        const audioSrc = this.node.getComponent(AudioSource)
+        this.audioBackGround = audioSrc;
     }
     
-    // private hideNodeInPrefab() {
-    //     const instantiatedNode = instantiate(this.GameModel.BirdPrefab); 
-    //     instantiatedNode.active = false; 
-    // }
-
     onMouseMove(event: EventMouse) {
         let a = new Vec3(0,0,0);
         const cursorPosition = event.getLocation();
@@ -100,9 +100,7 @@ export class GameController extends Component {
 
         if (cameraPos.x >= this.birdPosition.x - 150 && cameraPos.x <= this.birdPosition.x + 150 && cameraPos.y >= this.birdPosition.y - 30 && cameraPos.y <= this.birdPosition.y + 30) {
             this.score.addScore();
-            // this.hideNodeInPrefab();
-            // this.hideBird.active = false;
-            // this.BirdController.playExplosionEffect();
+            this.birdNode.destroy()
         }
     }
 
@@ -113,10 +111,24 @@ export class GameController extends Component {
     startGame() {
         director.resume();
     }
+
+    // destroyBird() {
+    //     const visibleSize = view.getVisibleSize(); 
+    //     const visibleOrigin = view.getVisibleOrigin(); 
+
+    //     const screenHeight = visibleSize.height;
+    //     const screenTop = visibleOrigin.y + screenHeight;
     
-    // playExplosionEffect(){
-    //     this.birdPrefab.enable = false;
+    //     if(this.birdPosition.y > screenTop) {
+    //         this.birdNode.destroy();
+    //     }
     // }
+
+    protected update(dt: number): void {
+        // if (this.birdPosition.y >= screenTop) {
+        //     this.destroyBird();
+        // }
+    }
 }
 
 
