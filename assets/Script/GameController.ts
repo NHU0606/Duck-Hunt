@@ -1,6 +1,6 @@
-import { _decorator, Canvas, Component, EventMouse, Node, Sprite, Vec3, EventTouch, instantiate, math, find, Input, input, Vec2, Camera, v3, director } from 'cc';
+import { BirdController } from './BirdController';
+import { _decorator, Canvas, Component, EventMouse, Node, Sprite, Vec3, EventTouch, instantiate, math, find, Input, input, Vec2, Camera, v3, director, Prefab } from 'cc';
 import { GameModel } from './GameModel';
-import { GameView } from './GameView';
 import { ScoreController } from './ScoreController';
 import { ResultController } from './ResultController';
 
@@ -18,17 +18,18 @@ export class GameController extends Component {
     @property({type:GameModel})
     private GameModel: GameModel;
 
-    @property({type:GameView})
-    private GameView: GameView;
-    
     @property({type: Camera})
     private camera : Camera;
     
     @property({type: Node})
     private testNode : Node;
+
+    // @property({type: Prefab})
+    // private hideBird : Prefab;
+    
     
     private birdPosition: Vec3;
-    private totalTime: number = 10;
+    private totalTime: number = 50;
     private time: number;
 
     protected start(): void {
@@ -60,9 +61,9 @@ export class GameController extends Component {
     }
 
     onTimeUp(){
-        console.log("stop timeeee")
         director.pause();
         this.result.showResult();
+        this.GameModel.BirdContain.active = false;
     }
            
     protected spawnBird(): void {
@@ -81,6 +82,11 @@ export class GameController extends Component {
         }
     }
     
+    // private hideNodeInPrefab() {
+    //     const instantiatedNode = instantiate(this.GameModel.BirdPrefab); 
+    //     instantiatedNode.active = false; 
+    // }
+
     onMouseMove(event: EventMouse) {
         let a = new Vec3(0,0,0);
         const cursorPosition = event.getLocation();
@@ -92,24 +98,25 @@ export class GameController extends Component {
         this.testNode.worldPosition = worldPos;
         cameraPos = this.GameModel.BirdContain.inverseTransformPoint(a, mousePos);
 
-        if (cameraPos.x >= this.birdPosition.x - 40 && cameraPos.x <= this.birdPosition.x + 40 && cameraPos.y >= this.birdPosition.y - 20 && cameraPos.y <= this.birdPosition.y + 20) {
+        if (cameraPos.x >= this.birdPosition.x - 150 && cameraPos.x <= this.birdPosition.x + 150 && cameraPos.y >= this.birdPosition.y - 30 && cameraPos.y <= this.birdPosition.y + 30) {
             this.score.addScore();
-            console.log("click on the bird ok")
+            // this.hideNodeInPrefab();
+            // this.hideBird.active = false;
+            // this.BirdController.playExplosionEffect();
         }
     }
-   
+
     onClickAgain() {
         director.loadScene('Play');
     }
 
     startGame() {
-        // this.result.node.active = false;
         director.resume();
     }
-
-    protected update(dt: number): void {
-        
-    }
+    
+    // playExplosionEffect(){
+    //     this.birdPrefab.enable = false;
+    // }
 }
 
 

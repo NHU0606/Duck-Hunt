@@ -61,8 +61,10 @@ export class BirdController extends Component {
         this.currentDirection = nextDirection;
     }
 
+    playExplosionEffect() {
+        this.node.active = false; // Hide the bird node when clicked on
+    }
     
-
     protected update(dt: number): void {
         this.moveBird(dt);
         this.updateDirection(dt);
