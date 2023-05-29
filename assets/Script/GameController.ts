@@ -1,10 +1,9 @@
-import { _decorator, Canvas, Component, EventMouse, Node, Sprite, Vec3, EventTouch, instantiate, math, find, Input, input, Vec2, Camera, v3, director, Prefab, view, AudioSource } from 'cc';
+import { _decorator, Canvas, Component, Animation, EventMouse, Node, Sprite, Vec3, EventTouch, instantiate, math, find, Input, input, Vec2, Camera, v3, director, Prefab, view, AudioSource, Button } from 'cc';
 import { GameModel } from './GameModel';
 import { ScoreController } from './ScoreController';
 import { ResultController } from './ResultController';
-
+import { BirdController } from './BirdController';
 const { ccclass, property } = _decorator;
-
 
 @ccclass('GameController')
 export class GameController extends Component {
@@ -26,26 +25,33 @@ export class GameController extends Component {
     @property({type: Node})
     private testNode : Node;
 
-    private birdNode: Node = null;
-    private birdPosition: Vec3;
+    @property({type: Button})
+    private againBtn: Button;
+
+    @property({type: Node})
     private totalTime: number = 50;
     private time: number;
-    private screenBounds: Vec2 = null;
+    private birdArray: BirdController[] = [];
 
     protected start(): void {
+        document.getElementById('Cocos3dGameContainer').style.cursor = 'none';
+
         this.result.hideResult();
 
         this.schedule(function(){
             this.spawnBird();
         }, 3)  
         
-        // time
-        this.time = this.totalTime;
-        this.updateTimeLabel();
-        this.schedule(this.updateTime, 1);
+        setTimeout(() => {
+            this.time = this.totalTime;
+            this.updateTimeLabel();
+            this.schedule(function(){
+                this.updateTime();
+            }, 1)  
+        }, math.randomRangeInt(1000, 1500)); 
     }    
 
-    updateTime(){
+    protected updateTime(): void{
         this.time--;
 
         if(this.time >= 0){
@@ -56,27 +62,25 @@ export class GameController extends Component {
         }
     }
 
-    updateTimeLabel(){
-        this.GameModel.TimeLabel.string = this.time.toString();
+    protected updateTimeLabel(): void{
+        this.GameModel.TimeLabel.string = `Time: ` + this.time.toString();
     }
 
-    onTimeUp(){
+    protected onTimeUp() : void {
         director.pause();
         this.result.showResult();
         this.GameModel.BirdContain.active = false;
     }
 
     protected spawnBird(): void {
-        this.birdNode = instantiate(this.GameModel.BirdPrefab);
-        this.GameModel.BirdContain.addChild(this.birdNode);
-        this.birdNode.setScale(0.6, 0.6, 0.6);
-        this.birdNode.setPosition(math.randomRangeInt(-450, 450), math.randomRangeInt(-300, -250), 0);
-        this.birdPosition = this.birdNode.getPosition();
+        const birdNode = instantiate(this.GameModel.BirdPrefab).getComponent(BirdController);
+        birdNode.Initialized(this.GameModel.BirdContain);
+        this.birdArray.push(birdNode);
     }
     
-    onLoad() {
-        this.screenBounds = new Vec2(view.getVisibleSize().width, view.getVisibleSize().height);
-        input.on(Input.EventType.MOUSE_DOWN, this.onMouseMove, this);
+    protected onLoad() : void  {
+        input.on(Input.EventType.MOUSE_DOWN, this.onMouseDown, this);
+        input.on(Input.EventType.MOUSE_MOVE, this.onMouseMove, this);
     
         if(director.getScene().name == 'Play'){
             this.startGame();
@@ -87,47 +91,49 @@ export class GameController extends Component {
         this.audioBackGround = audioSrc;
     }
     
-    onMouseMove(event: EventMouse) {
-        let a = new Vec3(0,0,0);
+    private onMouseDown(event: EventMouse) : void {
         const cursorPosition = event.getLocation();
         let mousePos = new Vec3(cursorPosition.x, cursorPosition.y , 0);
         let worldPos = v3();
-        let cameraPos: Vec3;
+        let cameraPos: Vec3 = new Vec3(0,0,0);
 
         worldPos = this.camera.screenToWorld(mousePos, worldPos);
         this.testNode.worldPosition = worldPos;
-        cameraPos = this.GameModel.BirdContain.inverseTransformPoint(a, mousePos);
+        cameraPos = this.GameModel.BirdContain.inverseTransformPoint(cameraPos, worldPos);
 
-        if (cameraPos.x >= this.birdPosition.x - 150 && cameraPos.x <= this.birdPosition.x + 150 && cameraPos.y >= this.birdPosition.y - 30 && cameraPos.y <= this.birdPosition.y + 30) {
+        let destroyBirdIndex : number = -1;
+        for(let i = 0; i < this.birdArray.length; ++i) {
+            const birdPosition = this.birdArray[i].node.position;
+            if (cameraPos.x >= birdPosition.x - 60 
+                && cameraPos.x <= birdPosition.x + 60 
+                && cameraPos.y >= birdPosition.y - 40 
+                && cameraPos.y <= birdPosition.y + 40) {
+                    destroyBirdIndex = i;
+                    break;
+            }
+        }
+        if (destroyBirdIndex >= 0) {
             this.score.addScore();
-            this.birdNode.destroy()
+            this.birdArray[destroyBirdIndex].node.destroy()
+            this.birdArray.splice(destroyBirdIndex, 1);
         }
     }
 
-    onClickAgain() {
+    private onMouseMove(event: EventMouse) : void {
+        const cursorPosition = event.getLocation();
+        let mousePos = new Vec3(cursorPosition.x, cursorPosition.y , 0);
+        let worldPos = v3();
+
+        worldPos = this.camera.screenToWorld(mousePos, worldPos);
+        this.testNode.worldPosition = worldPos;
+    }
+   
+    private onClickAgain() : void {
         director.loadScene('Play');
     }
 
-    startGame() {
+    private startGame() : void {
         director.resume();
-    }
-
-    // destroyBird() {
-    //     const visibleSize = view.getVisibleSize(); 
-    //     const visibleOrigin = view.getVisibleOrigin(); 
-
-    //     const screenHeight = visibleSize.height;
-    //     const screenTop = visibleOrigin.y + screenHeight;
-    
-    //     if(this.birdPosition.y > screenTop) {
-    //         this.birdNode.destroy();
-    //     }
-    // }
-
-    protected update(dt: number): void {
-        // if (this.birdPosition.y >= screenTop) {
-        //     this.destroyBird();
-        // }
     }
 }
 

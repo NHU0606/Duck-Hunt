@@ -7,7 +7,7 @@ export class ScoreController extends Component {
 
     updateScore(num: number) {
         this.curScore = num;
-        this.node.getComponent(LabelComponent).string = String(this.curScore);
+        this.node.getComponent(LabelComponent).string =`Score: ` + String(this.curScore) ;
         let maxScore = parseInt(localStorage.getItem('highscore'))
 
         if(maxScore < num) {
@@ -17,7 +17,6 @@ export class ScoreController extends Component {
 
     addScore(){
         const updatedScore = this.curScore + 1;
-        // const scoreText = `Score: ${updatedScore}`;
         this.updateScore(updatedScore);
     }
 }

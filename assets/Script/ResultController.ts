@@ -44,17 +44,7 @@ export class ResultController extends Component {
 
     hideResult(){
         this.node.active = false;
-    }
-
-    // resetScore(){
-    //     this.score.updateScore(0);
-    //     this.hideResult()
-    // }
-
-    // startGame(){
-    //     // this.score.updateScore(0);
-    //     this.hideResult()
-    // }
+    }   
 }
 
 

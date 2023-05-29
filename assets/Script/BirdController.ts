@@ -1,4 +1,4 @@
-import { _decorator, Canvas, Component, EventMouse, Node, Sprite, Vec3, Vec2, RigidBody} from 'cc';
+import { _decorator, Canvas, Component, EventMouse, Node, Sprite, Vec3, Vec2, RigidBody, math} from 'cc';
 const { ccclass, property } = _decorator;
 
 enum BirdDirection {
@@ -10,10 +10,16 @@ enum BirdDirection {
 
 @ccclass('BirdController')
 export class BirdController extends Component {
-    private birdSpeed: number = 80;
+    private birdSpeed: number = math.randomRangeInt(80, 150);
     private currentDirection: BirdDirection = BirdDirection.TopRight;
     private directionChangeDelay: number = 1;
     private directionChangeTime: number = 0;
+
+    public Initialized(parent : Node) : void {
+        parent.addChild(this.node);
+        this.node.setScale(0.6, 0.6, 0.6);
+        this.node.setPosition(math.randomRangeInt(-350, 350), math.randomRangeInt(-300, -250), 0);
+    }
     
     protected moveBird(dt: number): void {
         const movement = new Vec3(0, 0, 0);
@@ -61,10 +67,6 @@ export class BirdController extends Component {
         this.currentDirection = nextDirection;
     }
 
-    playExplosionEffect() {
-        this.node.active = false; // Hide the bird node when clicked on
-    }
-    
     protected update(dt: number): void {
         this.moveBird(dt);
         this.updateDirection(dt);

@@ -9,8 +9,8 @@ export class EntryController extends Component {
     @property({type: Button})
     private helpBtn: Button;
 
-    @property({type: Button})
-    private playBtn: Button;
+    // @property({type: Button})
+    // private playBtn: Button;
     
     onclickBtnStart(){
         director.loadScene('Play')
@@ -20,9 +20,9 @@ export class EntryController extends Component {
         director.loadScene('Help')
     }
 
-    onclickBtnPlay(){
-        director.loadScene('Play')
-    }
+    // onclickBtnPlay(){
+    //     director.loadScene('Play')
+    // }
 }
 
 
