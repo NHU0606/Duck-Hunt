@@ -1,4 +1,4 @@
-import { _decorator, Canvas, Component, Animation, EventMouse, Node, Sprite, Vec3, EventTouch, instantiate, math, find, Input, input, Vec2, Camera, v3, director, Prefab, view, AudioSource, Button } from 'cc';
+import { _decorator, Canvas, Component, Animation, EventMouse, Node, Sprite, Vec3, instantiate, math, Input, input, Vec2, Camera, v3, director, AudioSource, Button } from 'cc';
 import { GameModel } from './GameModel';
 import { ScoreController } from './ScoreController';
 import { ResultController } from './ResultController';
@@ -9,6 +9,9 @@ const { ccclass, property } = _decorator;
 export class GameController extends Component {
     @property(AudioSource)
     private audioBackGround: AudioSource = null;
+
+    @property(AudioSource)
+    private audioShoot: AudioSource = null;
     
     @property({type: ScoreController})
     private score: ScoreController;
@@ -32,6 +35,7 @@ export class GameController extends Component {
     private totalTime: number = 50;
     private time: number;
     private birdArray: BirdController[] = [];
+    audioSource: any;
 
     protected start(): void {
         document.getElementById('Cocos3dGameContainer').style.cursor = 'none';
@@ -127,7 +131,7 @@ export class GameController extends Component {
         worldPos = this.camera.screenToWorld(mousePos, worldPos);
         this.testNode.worldPosition = worldPos;
     }
-   
+
     private onClickAgain() : void {
         director.loadScene('Play');
     }

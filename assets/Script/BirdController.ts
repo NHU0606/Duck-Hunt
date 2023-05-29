@@ -49,8 +49,8 @@ export class BirdController extends Component {
 
                 default : 
                 break;
-                }
-            this.node.position = this.node.position.add(movement);
+            }
+        this.node.position = this.node.position.add(movement);
     }
             
     protected updateDirection(dt: number): void {
