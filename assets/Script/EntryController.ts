@@ -12,6 +12,9 @@ export class EntryController extends Component {
     @property({type: Button})
     private playBtn: Button;
     
+    @property({type: Button})
+    private menuBtn: Button;
+
     onclickBtnStart(){
         director.loadScene('Play')
     }
@@ -22,6 +25,10 @@ export class EntryController extends Component {
 
     onclickBtnPlay(){
         director.loadScene('Play')
+    }
+
+    onclickBtnMenu(){
+        director.loadScene('Entry')
     }
 }
 

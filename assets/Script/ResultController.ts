@@ -14,7 +14,10 @@ export class ResultController extends Component {
     private urScore: Label;
 
     @property({type: Button})
-    private btnPlayAgain: Button;
+    private againBtn: Button;
+
+    @property({type: Button})
+    private menuBtn: Button;
 
     @property({type: Sprite})
     private playerDecor: Sprite;
@@ -45,6 +48,15 @@ export class ResultController extends Component {
     hideResult(){
         this.node.active = false;
     }   
+
+    private onClickAgain() : void {
+        director.loadScene('Play');
+    }
+
+    private onClickMenu() : void {
+        director.loadScene('Entry');
+    }
+
 }
 
 

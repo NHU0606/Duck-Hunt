@@ -11,13 +11,16 @@ export class ScoreController extends Component {
         let maxScore = parseInt(localStorage.getItem('highscore'))
 
         if(maxScore < num) {
-            localStorage.setItem('highscore', String(num))
+            localStorage.setItem('highscore', num.toString())
         }
     }
 
     addScore(){
-        const updatedScore = this.curScore + 1;
-        this.updateScore(updatedScore);
+        this.updateScore(this.curScore + 1);
+    }
+
+    hideScore() {
+        this.node.getComponent(LabelComponent).string = '';
     }
 }
 

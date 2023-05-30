@@ -1,4 +1,4 @@
-import { _decorator, Canvas, Component, Animation, EventMouse, Node, Sprite, Vec3, instantiate, math, Input, input, Vec2, Camera, v3, director, AudioSource, Button } from 'cc';
+import { _decorator, Canvas, Component, Animation, EventMouse, Node, Sprite, Vec3, instantiate, math, Input, input, Vec2, Camera, v3, director, AudioSource, Button, Label, cclegacy } from 'cc';
 import { GameModel } from './GameModel';
 import { ScoreController } from './ScoreController';
 import { ResultController } from './ResultController';
@@ -7,12 +7,6 @@ const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
 export class GameController extends Component {
-    @property(AudioSource)
-    private audioBackGround: AudioSource = null;
-
-    @property(AudioSource)
-    private audioShoot: AudioSource = null;
-    
     @property({type: ScoreController})
     private score: ScoreController;
     
@@ -21,26 +15,26 @@ export class GameController extends Component {
 
     @property({type:GameModel})
     private GameModel: GameModel;
+    
+    @property({type: Label})
+    private timeLabel: Label;
 
     @property({type: Camera})
     private camera : Camera;
+
+    @property({type: Node})
+    private inputNode : Node;
     
     @property({type: Node})
     private testNode : Node;
 
-    @property({type: Button})
-    private againBtn: Button;
-
-    @property({type: Node})
-    private totalTime: number = 50;
+    private totalTime: number = 9;
     private time: number;
     private birdArray: BirdController[] = [];
-    audioSource: any;
 
     protected start(): void {
         document.getElementById('Cocos3dGameContainer').style.cursor = 'none';
-
-        this.result.hideResult();
+        localStorage.setItem('highscore', '0')
 
         this.schedule(function(){
             this.spawnBird();
@@ -52,8 +46,23 @@ export class GameController extends Component {
             this.schedule(function(){
                 this.updateTime();
             }, 1)  
-        }, math.randomRangeInt(1000, 1500)); 
+        },1000); 
     }    
+
+    protected onLoad() : void  {
+        this.inputNode.on(Node.EventType.MOUSE_DOWN, this.onMouseDown, this);
+        this.inputNode.on(Node.EventType.MOUSE_MOVE, this.onMouseMove, this);
+        this.inputNode.on(Node.EventType.MOUSE_ENTER, this.onMouseEnter, this);
+        this.inputNode.on(Node.EventType.MOUSE_LEAVE, this.onMouseLeave, this);
+
+        if(director.getScene().name == 'Play'){
+            this.startGame();
+        }
+
+        //audio
+        const audioSrc = this.node.getComponent(AudioSource)
+        this.GameModel.AudioBackGround = audioSrc;
+    }
 
     protected updateTime(): void{
         this.time--;
@@ -67,32 +76,29 @@ export class GameController extends Component {
     }
 
     protected updateTimeLabel(): void{
-        this.GameModel.TimeLabel.string = `Time: ` + this.time.toString();
+        this.timeLabel.string = `Time: ` + this.time.toString();
     }
 
     protected onTimeUp() : void {
-        director.pause();
+        this.inputNode.off(Node.EventType.MOUSE_DOWN, this.onMouseDown, this);
+        this.inputNode.off(Node.EventType.MOUSE_MOVE, this.onMouseMove, this);
+        this.inputNode.off(Node.EventType.MOUSE_ENTER, this.onMouseEnter, this);
+        this.inputNode.off(Node.EventType.MOUSE_LEAVE, this.onMouseLeave, this);
+
         this.result.showResult();
+        document.getElementById('Cocos3dGameContainer').style.cursor = '';
         this.GameModel.BirdContain.active = false;
+        this.testNode.active = false;
+        this.timeLabel.string = '';
+        this.score.hideScore();
+        this.GameModel.TimeBoard.active = false;
+        this.GameModel.ScoreBoard.active = false;
     }
 
     protected spawnBird(): void {
         const birdNode = instantiate(this.GameModel.BirdPrefab).getComponent(BirdController);
         birdNode.Initialized(this.GameModel.BirdContain);
         this.birdArray.push(birdNode);
-    }
-    
-    protected onLoad() : void  {
-        input.on(Input.EventType.MOUSE_DOWN, this.onMouseDown, this);
-        input.on(Input.EventType.MOUSE_MOVE, this.onMouseMove, this);
-    
-        if(director.getScene().name == 'Play'){
-            this.startGame();
-        }
-
-        //audio
-        const audioSrc = this.node.getComponent(AudioSource)
-        this.audioBackGround = audioSrc;
     }
     
     private onMouseDown(event: EventMouse) : void {
@@ -132,10 +138,16 @@ export class GameController extends Component {
         this.testNode.worldPosition = worldPos;
     }
 
-    private onClickAgain() : void {
-        director.loadScene('Play');
+    private onMouseEnter(event: EventMouse) : void {
+        this.testNode.active = true;
+        document.getElementById('Cocos3dGameContainer').style.cursor = 'none';
     }
 
+    private onMouseLeave(event: EventMouse) : void {
+        this.testNode.active = false;
+        document.getElementById('Cocos3dGameContainer').style.cursor = '';
+    }
+ 
     private startGame() : void {
         director.resume();
     }
