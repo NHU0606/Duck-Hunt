@@ -1,10 +1,19 @@
 import { _decorator, Button, Component, director, EventMouse, Input, input, Node} from 'cc';
+import { AudioController } from './AudioController';
 const { ccclass, property } = _decorator;
 
 @ccclass('PauseController')
 export class PauseController extends Component {
     private isIconPause: boolean = false;
     private isPause: boolean = false;
+
+    public get IsPause() : boolean {
+        return this.isPause;
+    }
+
+    public set IsPause(value : boolean) {
+        this.isPause = value;
+    }
 
     @property(Node)
     public pauseIcon: Node = null;
@@ -15,15 +24,6 @@ export class PauseController extends Component {
     protected onLoad(): void {
         this.playIcon.active = false;
         this.pauseIcon.active = true;
-    }
-
-    onClickIconPause(){
-        this.isPause = !this.isPause;
-        if(this.isPause){
-            director.pause();
-        } else {
-            director.resume();
-        }
     }
 
     onToggleButtonClicked() {

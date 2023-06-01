@@ -1,19 +1,13 @@
-import { _decorator, Component, Node, Button, director, AudioSource, Sprite, input, Input, sys } from 'cc';
+import { _decorator, Component, Node, Button, director, Sprite, sys, AudioSource } from 'cc';
 const { ccclass, property } = _decorator;
 
-@ccclass('EntryController')
-export class EntryController extends Component {
-    private isIconShown: boolean = false;
-    private isMuted: boolean = false;
+@ccclass('HelpController')
+export class HelpController extends Component {
+    @property({type: Button})
+    private menuBtn: Button = null;
 
     @property({type: Button})
-    private startBtn: Button;
-
-    @property({type: Button})
-    private helpBtn: Button;
-
-    @property(AudioSource)
-    public audioBackground: AudioSource = null;
+    private playBtn: Button = null;
 
     @property({type: Sprite})
     private iconToShow: Sprite = null;    
@@ -21,15 +15,16 @@ export class EntryController extends Component {
     @property({type: Sprite})
     private iconToHide: Sprite = null;
 
+    @property(AudioSource)
+    public audioBackground: AudioSource = null;
+
     private variableVolume: number;
     private variableVolumeArray: number[] = [];
     private convertVolume: number;
-
+    private isIconShown: boolean = false;
+    private isMuted: boolean = false;
+    
     protected start(): void {
-        if(!localStorage.getItem('highscore')) {
-            localStorage.setItem('highscore', '0')
-        } 
-        
         var getVolumne = sys.localStorage.getItem('volume')
 
         if(getVolumne){
@@ -52,7 +47,6 @@ export class EntryController extends Component {
             this.iconToShow.node.active = false;
             this.iconToHide.node.active = true;
             this.audioBackground.volume = 0;
-
         }
     }
 
@@ -77,22 +71,6 @@ export class EntryController extends Component {
 
     }
 
-    onclickBtnStart(){
-        director.loadScene('Play')
-    }
-
-    onclickBtnHelp(){
-        director.loadScene('Help')
-    }
-
-    onclickBtnPlay(){
-        director.loadScene('Play')
-    }
-
-    onclickBtnMenu(){
-        director.loadScene('Entry')
-    }
-
     protected onLoad(): void {
         this.iconToShow.node.active = false;
         this.iconToHide.node.active = true;
@@ -115,6 +93,14 @@ export class EntryController extends Component {
     updateIconsVisibility() {
         this.iconToShow.node.active = this.isIconShown;
         this.iconToHide.node.active = !this.isIconShown;
+    }
+
+    onClickMenuBtn(){
+        director.loadScene('Entry')
+    }
+
+    onClickPlayBtn(){
+        director.loadScene('Play')
     }
 }
 

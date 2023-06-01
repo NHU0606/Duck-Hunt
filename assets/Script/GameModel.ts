@@ -41,7 +41,6 @@ export class GameModel extends Component {
         return this.audioBackGround;
     }
 
-
     public set AudioBackGround(audioBackGround: AudioSource){
         this.audioBackGround = audioBackGround;
     }

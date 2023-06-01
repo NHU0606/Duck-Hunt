@@ -12,15 +12,15 @@ enum BirdDirection {
 
 @ccclass('BirdController')
 export class BirdController extends Component {
-    private birdSpeed: number = math.randomRangeInt(80, 100);
-    private currentDirection: BirdDirection = BirdDirection.TopRight;
+    private birdSpeed: number = math.randomRangeInt(120, 350);
+    private currentDirection: BirdDirection = BirdDirection.DownRight;
     private directionChangeDelay: number = 1;
     private directionChangeTime: number = 0;
 
     public Initialized(parent : Node) : void {
         parent.addChild(this.node);
         this.node.setScale(0.6, 0.6, 0.6);
-        this.node.setPosition(math.randomRangeInt(-250, 250), math.randomRangeInt(0, -50), 0);
+        this.node.setPosition(math.randomRangeInt(-250, 400), math.randomRangeInt(-200, -50), 0);
     }
     
     protected moveBird(dt: number): void {
@@ -42,18 +42,17 @@ export class BirdController extends Component {
                     this.node.angle = 135;
                     this.node.scale = new Vec3 (0.6, -0.6, 0);
                     break;
-                case BirdDirection.TopRight:
-                    movement.x += this.birdSpeed * dt;
-                    movement.y += this.birdSpeed * dt;
-                    this.node.angle = 45;
-                    this.node.scale = new Vec3(0.6, 0.6, 0);
-                    break;
-
                 case BirdDirection.DownLeft:
                     movement.x -= this.birdSpeed * dt;
                     movement.y -= this.birdSpeed * dt;
                     this.node.angle = 225;
                     this.node.scale = new Vec3(0.6, -0.6, 0);
+                    break;
+                case BirdDirection.TopRight:
+                    movement.x += this.birdSpeed * dt;
+                    movement.y += this.birdSpeed * dt;
+                    this.node.angle = 45;
+                    this.node.scale = new Vec3(0.6, 0.6, 0);
                     break;
                 case BirdDirection.DownRight:
                     movement.x += this.birdSpeed * dt;
